@@ -26,7 +26,7 @@
     
                 if(endsWith($fname,$ending))
                 {
-                    if(ucwords(str_replace('_',' ',str_replace($ending,'',basename($fname)))) === $class)
+                    if(str_replace(' ','',ucwords(str_replace('_',' ',str_replace($ending,'',basename($fname))))) === $class)
                         require_once($fname);
                 }
             });
