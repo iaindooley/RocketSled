@@ -1,0 +1,28 @@
+RocketSled is a PHP 5.3 Framework that doesn't do anything - so why not use it?
+
+I'll put some better documentation here later, but for now I've included
+three demo packages one, two, user and stumpy that show you how namespacing
+and stuff is used.
+
+Basically the approach is that you don't need to namespace anything unless
+you have a class name collission in which case namespacing helps you
+out of a jam.
+
+Thusly two classes are included in the package tree called Test and the
+sample code demonstrates how the user\Using class can choose which Test
+class to use by uncommenting the namespace statement on line 2 and
+running:
+
+php index.php
+
+You can also point your browser at index.php and ... 
+
+point your browser at index.php?r=Test OR ...
+
+point your browser at index.php?r=two\Test
+
+So basically you can run any class by implementing the class Runnable.
+
+Take a look at packages/stumpy/autoload.php
+
+Also take a look at packages/user/runnable.default.php
