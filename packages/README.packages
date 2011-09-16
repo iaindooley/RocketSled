@@ -1,0 +1,11 @@
+This is the default packages directory.
+
+This README is in here mostly so that git will check out this
+directory.
+
+But it also serves to tell you that this directory is where
+you can put your files and directories for your project.
+
+If you wish to change the location of your packages directory,
+simply include a file called packages.congig.php in your 
+web root that defines teh constant PACKAGES_DIR.

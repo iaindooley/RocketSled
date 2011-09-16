@@ -58,14 +58,12 @@
     });
     
     /**
-    * Recursively scan the package tree for files called autoload.php
-    * with custom autoload implementations, or files called config.php
-    * with some package configuration directives
+    * Recursively scan the package tree for files called config.php
+    * with package configuration or custom autoload implementations
     */
     filteredPackages(function($fname)
     {
-        if((basename($fname) == 'autoload.php')||
-           (basename($fname) == 'config.php'))
+        if(basename($fname) == 'config.php')
             require_once($fname);
     });
     
