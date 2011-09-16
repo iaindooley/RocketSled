@@ -48,7 +48,7 @@ php index.php
 
 THE BASICS (which is everything really)
 
-Any class which implements the rocketsled/Runnable interface can be executed
+Any class which implements the rocketsled\Runnable interface can be executed
 from the command line:
 
 php index.php RunnableClass
@@ -97,7 +97,7 @@ inside autoload.php:
 A WORD ON NAMESPACES
 
 The default autoload implementation supports namespaces. In general I'm of the 
-opinion that the way most frameworks have chosent to use namespaces is incredibly
+opinion that the way most frameworks have chosen to use namespaces is incredibly
 cumbersome (ie. that each an every class should be namespaced).
 
 I think that you should avoid namespaces and use them only where required, ie. because
