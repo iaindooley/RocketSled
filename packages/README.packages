@@ -8,4 +8,8 @@ you can put your files and directories for your project.
 
 If you wish to change the location of your packages directory,
 simply include a file called packages.congig.php in your 
-web root that defines teh constant PACKAGES_DIR.
+web root that defines the constant PACKAGES_DIR.
+
+NB: you should define this using php.net/define rather than
+the const keyword so that the constant PACKAGES_DIR is 
+available in the global namespace.
