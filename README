@@ -1,8 +1,25 @@
 RocketSled is a micro framework for PHP 5.3 that makes it simple to organise and
 execute classes from the command line or web browser.
 
-It consists of a single file (index.php) and a packages directory where you put your
-classes.
+The philosophy is that the "framework" part of your framework should do as little
+as possible - ie. just provide literally a framework within which code can be 
+developed. Within this framework I plan to release many other packages, equally
+small and equally focused in scope.
+
+The other key goal of RocketSled is that you should be able to install and run 
+absolutely any code you find anywhere (there is so much PHP out there that works, 
+and may not be pretty, but you still just want to use it because it will save you
+time), and that packages written for RocketSled should try and be universally 
+useful, ie. that RocketSled doesn't provide any specific libraries or base classes
+that would preclude you from taking a package that was originally written to run
+within RocketSled and running it in, say, a Zend application.
+
+-----------------------------------------------------------------------------------
+ARCHITECTURE
+-----------------------------------------------------------------------------------
+
+RocketSled consists of a single file (index.php) and a packages directory where you
+put your classes.
 
 The default location for the packages directory is just a directory called packages
 in the web root.
