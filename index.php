@@ -3,6 +3,11 @@
     use ReflectionClass;
     use Exception;
 
+    if(file_exists('packages.config.php'))
+        require_once('packages.config.php');
+    else
+        define('PACKAGES_DIR','packages');
+
     spl_autoload_register(function($class)
     {
         $namespaced = explode('\\',$class);
@@ -87,7 +92,7 @@
         global $packages;
         
         if($packages === NULL)
-            $packages = directoryList('packages');
+            $packages = directoryList(PACKAGES_DIR);
         
         return $packages;
     }

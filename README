@@ -1,28 +1,106 @@
-RocketSled is a PHP 5.3 Framework that doesn't do anything - so why not use it?
+RocketSled is a micro framework for PHP 5.3 that makes it simple to organise and
+execute classes from the command line or web browser.
 
-I'll put some better documentation here later, but for now I've included
-three demo packages one, two, user and stumpy that show you how namespacing
-and stuff is used.
+It consists of a single file (index.php) and a packages directory where you put your
+classes.
 
-Basically the approach is that you don't need to namespace anything unless
-you have a class name collission in which case namespacing helps you
-out of a jam.
+The default location for the packages directory is just a directory called packages
+in the web root.
 
-Thusly two classes are included in the package tree called Test and the
-sample code demonstrates how the user\Using class can choose which Test
-class to use by uncommenting the namespace statement on line 2 and
-running:
+You can modify this by including a file:
+
+packages.config.php
+
+in the web root which defines the constant PACKAGES_DIR.
+
+HELLO WORLD:
+
+1. Create a file in your packages directory called:
+
+hello_world.class.php
+
+2. Add the following code to it:
+
+<?php
+   use rocketsled\Runnable;
+
+   class HelloWorld implements Runnable
+   {
+       public function run()
+       {
+           echo 'Hello World'.PHP_EOL;
+       }
+   }
+
+3. Create the file:
+
+packages/runnable.default.php
+
+4. Add the following code to it:
+
+<?php return 'HelloWorld';
+
+5. Run it from the command line with:
 
 php index.php
 
-You can also point your browser at index.php and ... 
+6. Run it from the web browser by simply pointing a browser to your web root
 
-point your browser at index.php?r=Test OR ...
+THE BASICS (which is everything really)
 
-point your browser at index.php?r=two\Test
+Any class which implements the rocketsled/Runnable interface can be executed
+from the command line:
 
-So basically you can run any class by implementing the class Runnable.
+php index.php RunnableClass
 
-Take a look at packages/stumpy/autoload.php
+or from the browser:
 
-Also take a look at packages/user/runnable.default.php
+index.php?r=RunnableClass
+
+The default autoloader implementation will load any class in any subdirectory
+of your packages directory. The class names are mapped where:
+
+ClassName
+
+is expected to be located in a file called:
+
+class_name.class.php
+
+The default autoloader implementation also supports namespaces. It expects the
+namespace path to match the directory structure so the class:
+
+my\namespace\ClassName
+
+is expected to be located in:
+
+PACKAGES_DIR/my/namespace/class_name.class.php
+
+You can add your own autoloader implementations using spl_autoload_register by
+simply creating a file called:
+
+autoload.php
+
+anywhere in your packages directory. For example if you wanted to use a package
+where all classes were defined in a single file, you would place the class
+file in a directory inside your packages directory, and include the following
+inside autoload.php:
+
+<?php
+    spl_autoload_register(function($class)
+    {
+        $my_classes = array('FirstClass','SecondClass','ThirdClass');
+        
+        if(in_array($class,$my_classes))
+            require_once(PACKAGES_DIR.'/my_package/classes.php');
+    });
+
+A WORD ON NAMESPACES
+
+The default autoload implementation supports namespaces. In general I'm of the 
+opinion that the way most frameworks have chosent to use namespaces is incredibly
+cumbersome (ie. that each an every class should be namespaced).
+
+I think that you should avoid namespaces and use them only where required, ie. because
+you have two packages that you want to use, both of which have a class called "User",
+or where you want to use a package which might come from another framework which
+uses namespaces.
