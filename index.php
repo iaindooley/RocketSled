@@ -3,11 +3,30 @@
     use ReflectionClass;
     use Exception;
 
+    //allow implementor to override the packages dir
     if(file_exists('packages.config.php'))
         require_once('packages.config.php');
     else
         define('PACKAGES_DIR','packages');
 
+    /**
+    * Default auto loader implementation, expects:
+    *
+    * ClassName
+    *
+    * should map to:
+    *
+    * class_name.php
+    *
+    * Recursively scans PACKAGES_DIR to find classes. Also 
+    * supports namespaces and expects that:
+    *
+    * my\namespace\ClassName
+    *
+    * is going to be located at:
+    *
+    * PACKAGES_DIR/my/namespace/class_name.class.php
+    */
     spl_autoload_register(function($class)
     {
         $namespaced = explode('\\',$class);
@@ -38,27 +57,38 @@
         }
     });
     
-    $autoloads = filteredPackages(function($fname)
+    /**
+    * Recursively scan the package tree for files called autoload.php
+    * with custom autoload implementations, or files called config.php
+    * with some package configuration directives
+    */
+    filteredPackages(function($fname)
     {
-        if(endsWith($fname,'autoload.php'))
+        if((basename($fname) == 'autoload.php')||
+           (basename($fname) == 'config.php'))
             require_once($fname);
     });
-
+    
+    /**
+    * Get the class to run whether we're on the command line or in
+    * the browser
+    */
     if(isset($argv))
         $runnable_class = isset($argv[1]) ? $argv[1]:defaultRunnable();
     else
         $runnable_class = isset($_GET['r']) ? $_GET['r']:defaultRunnable();
 
+    //Make sure no-one's trying to haxor us by running a class that's not runnable
     $refl = new ReflectionClass($runnable_class);
     
     if(!$refl->implementsInterface('rocketsled\\Runnable'))
         die('Running a class that does not implement interface Runnable is not allowed');
-    
+
+    //Run that shit!
     $runnable = new $runnable_class();
     $runnable->run();
     
-
-    /* SOME FUNCTIONS */
+    //Some functions
     function endsWith($str,$test)
     {
         return (substr($str, -strlen($test)) == $test);
@@ -136,6 +166,7 @@
        return $path;
     }
 
+    //Some classes
     interface Runnable
     {
         public function run();
