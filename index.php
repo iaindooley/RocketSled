@@ -164,10 +164,7 @@
        return $path;
     }
 
-    //Some classes
     interface Runnable
     {
         public function run();
     }
-
-    class AutoloadSuccessful extends Exception {}
