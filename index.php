@@ -2,6 +2,7 @@
     namespace rocketsled;
     use ReflectionClass;
     use Exception;
+$start = microtime(true);
 
     //allow implementor to override the packages dir
     if(file_exists('packages.config.php'))
@@ -63,7 +64,7 @@
     */
     filteredPackages(function($fname)
     {
-        if(basename($fname) == 'config.php')
+        if(basename($fname) == 'rs.config.php')
             require_once($fname);
     });
     
@@ -168,3 +169,5 @@
     {
         public function run();
     }
+
+die('took: '.(microtime(true) - $start));

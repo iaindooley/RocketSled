@@ -101,7 +101,7 @@ PACKAGES_DIR/my/namespace/class_name.class.php
 If you have some package specific configuration or a custom autoloader 
 implementation you can include it in a file in your package called:
 
-config.php
+rs.config.php
 
 You should always namespace your config files so as not to risk clashes in
 constant or global variable names.
