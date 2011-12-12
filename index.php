@@ -169,5 +169,3 @@ $start = microtime(true);
     {
         public function run();
     }
-
-die('took: '.(microtime(true) - $start));
