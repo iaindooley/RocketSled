@@ -2,7 +2,6 @@
     namespace rocketsled;
     use ReflectionClass;
     use Exception;
-$start = microtime(true);
 
     //allow implementor to override the packages dir
     if(file_exists('packages.config.php'))
