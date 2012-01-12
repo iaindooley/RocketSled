@@ -19,29 +19,31 @@
 * Create a file in your packages directory called:
 
 ```
-    hello_world.class.php
+hello_world.class.php
 ```
 
 2. Add the following code to it:
+
 ```php
-    <?php
-       use rocketsled\Runnable;
-    
-       class HelloWorld implements Runnable
+<?php
+   use rocketsled\Runnable;
+
+   class HelloWorld implements Runnable
+   {
+       public function run()
        {
-           public function run()
-           {
-               echo 'Hello World'.PHP_EOL;
-           }
+           echo 'Hello World'.PHP_EOL;
        }
+   }
 ```
 
 3. Run it from the command line with:
+
 ```
 php index.php HelloWorld
 ```
 
 4. Run it from the web browser by simply pointing a browser to your web root as follows:
 ```
-    http://localhost/?r=HelloWorld
+http://localhost/?r=HelloWorld
 ```
