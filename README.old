@@ -1,19 +1,3 @@
-RocketSled is a micro framework for PHP 5.3 that makes it simple to organise and
-execute classes from the command line or web browser.
-
-The philosophy is that the "framework" part of your framework should do as little
-as possible - ie. just provide literally a framework within which code can be 
-developed. Within this framework I plan to release many other packages, equally
-small and equally focused in scope.
-
-The other key goal of RocketSled is that you should be able to install and run 
-absolutely any code you find anywhere (there is so much PHP out there that works, 
-and may not be pretty, but you still just want to use it because it will save you
-time), and that packages written for RocketSled should try and be universally 
-useful, ie. that RocketSled doesn't provide any specific libraries or base classes
-that would preclude you from taking a package that was originally written to run
-within RocketSled and running it in, say, a Zend application.
-
 -----------------------------------------------------------------------------------
 ARCHITECTURE
 -----------------------------------------------------------------------------------
@@ -32,40 +16,6 @@ globally namespaced constant, eg:
 
 <?php define('PACKAGES_DIR','/usr/local/share/packages/');
 
------------------------------------------------------------------------------------
-HELLO WORLD
------------------------------------------------------------------------------------
-
-1. Create a file in your packages directory called:
-
-hello_world.class.php
-
-2. Add the following code to it:
-
-<?php
-   use rocketsled\Runnable;
-
-   class HelloWorld implements Runnable
-   {
-       public function run()
-       {
-           echo 'Hello World'.PHP_EOL;
-       }
-   }
-
-3. Create the file:
-
-packages/runnable.default.php
-
-4. Add the following code to it:
-
-<?php return 'HelloWorld';
-
-5. Run it from the command line with:
-
-php index.php
-
-6. Run it from the web browser by simply pointing a browser to your web root
 
 -----------------------------------------------------------------------------------
 THE BASICS (which is everything really)
@@ -97,6 +47,8 @@ my\namespace\ClassName
 is expected to be located in:
 
 PACKAGES_DIR/my/namespace/class_name.class.php
+
+CAN RUN namespaced files from URL or COMMAND LINE
 
 If you have some package specific configuration or a custom autoloader 
 implementation you can include it in a file in your package called:
@@ -132,6 +84,8 @@ the following config.php in your package directory:
         if(in_array($class,$my_classes))
             require_once(PACKAGES_DIR.'/my_package/classes.php');
     });
+
+HOW TO USE ANOTHER PACKAGE - ADDING AUTOLOAD
 
 -----------------------------------------------------------------------------------
 A WORD ON NAMESPACES
