@@ -77,7 +77,7 @@ php index.php RunnableClass
 or from the browser:
 
 ```
-index.php?r=RunnableClass
+http://localhost/?r=RunnableClass
 ```
 
 The default autoloader implementation will load any class anywhere in 
@@ -128,9 +128,10 @@ rs.config.php
 It is a good idea to namespace your config files so as not to risk clashes in
 constant or global variable names.
 
-You should avoid using php.net/define in package specific config files. As
-constants defined using php.net/define are not namespaced. Instead, use
-the const keyword to define constants so that they will be namespaced, eg:
+You should avoid using php.net/define in package specific config files As
+constants defined using php.net/define are not namespaced.
+
+Instead, use the const keyword to define constants so that they will be namespaced, eg:
 
 ```php
 <?php
@@ -142,7 +143,7 @@ You can later access this constant with my_package\SOME_CONFIG.
 
 For example if you wanted to use a package where all classes were defined in
 a single file (ie. not supported by the default autoloader), you could include
-the following config.php in your package directory:
+the following in rs.config.php in your package directory:
 
 ```php
 <?php
@@ -179,13 +180,25 @@ this can also work with namespaced classes:
 <?php return 'my\namespace\ClassName';
 ```
 
+You can then execute that class from the command line:
+
+```
+php index.php
+```
+
+or the browser:
+
+```
+http://localhost/
+```
+
 ## A word on namespaces
 
 The default autoload implementation supports namespaces. In general I'm of the 
 opinion that the way most frameworks have chosen to use namespaces is 
 cumbersome (ie. that each an every class should be namespaced).
 
-I personally think it's reasonable to not use namespaces for "top level" classes in a re-usable package, however if you're create a class called "User" in a package, then it would be a good idea to add a namespace to it. Basically I think you should use namespaces where required but not as a rule for everything.
+I personally think it's reasonable to not use namespaces for "top level" classes in a re-usable package, however if you create a class called "User" in a package, then it would be a good idea to add a namespace to it. Basically I think you should use namespaces where required but not as a rule for everything.
 
 Requiring that you declare every single class before you use it at the top of your file basically sucks and ruins one of the most awesome things about autoloading. There is a good article on the subject here: http://propel.posterous.com/the-end-of-autoloading
 
