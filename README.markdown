@@ -1,5 +1,7 @@
 # RocketSled - a front controller micro framework for PHP 5.3
 
+by iain@workingsoftware.com.au
+
 ## Goals:
 
 * Provide a front controller and default autoload implementation
