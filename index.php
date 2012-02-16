@@ -34,12 +34,10 @@
         if(count($namespaced) > 1)
         {
             $class_part = strtolower(preg_replace('/^_/','',preg_replace('/([A-Z])/','_\1',array_pop($namespaced)))).'.class.php';
-            $fname = 'packages/'.implode('/',$namespaced).'/'.$class_part;
+            $fname = PACKAGES_DIR.'/'.implode('/',$namespaced).'/'.$class_part;
             
-            if(!file_exists($fname))
-                die('The default auto loader expects: '.$class.' to map to: '.$fname.'. You should register your own autoloader if your package is setup differently');
-
-            require_once($fname);
+            if(file_exists($fname))
+                require_once($fname);
         }
         
         else
@@ -121,7 +119,7 @@
         
         if($packages === NULL)
             $packages = directoryList(PACKAGES_DIR);
-        
+
         return $packages;
     }
 
