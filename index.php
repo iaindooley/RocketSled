@@ -1,5 +1,5 @@
 <?php
-    namespace rocketsled;
+    namespace RocketSled;
     use ReflectionClass;
     use Exception;
 
@@ -21,11 +21,14 @@
     * Recursively scans PACKAGES_DIR to find classes. Also 
     * supports namespaces and expects that:
     *
-    * my\namespace\ClassName
+    * My\NameSpace\ClassName
     *
     * is going to be located at:
     *
-    * PACKAGES_DIR/my/namespace/class_name.class.php
+    * PACKAGES_DIR/My/NameSpace/class_name.class.php
+    *
+    * this means that package *directories* are served as they are namespaced
+    * but that ClassName maps to a file called class_name.class.php
     */
     spl_autoload_register(function($class)
     {
