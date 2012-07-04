@@ -99,25 +99,28 @@ The default autoloader implementation also supports namespaces. It expects the
 namespace path to match the directory structure so the class:
 
 ```php
-my\namespace\ClassName
+my\NameSpace\ClassName
 ```
 
 is expected to be located in:
 
 ```
-PACKAGES_DIR/my/namespace/class_name.class.php
+PACKAGES_DIR/my/NameSpace/class_name.class.php
 ```
+NB: The capitaliasation used in the namesapce is preserved in the path,
+however the way that class names map to class file name is enforced.
 
 Namespaced classes can also be executed from the command line:
 
 ```
-php index.php 'my\namespace\ClassName'
+php index.php "my\\NameSpace\\ClassName"
 ```
+NB: You will need to use double backslashes on the command line
 
 or from the browser:
 
 ```
-http://localhost/?r=my\namespace\ClassName
+http://localhost/?r=my\NameSpace\ClassName
 ```
 
 If you have some package specific configuration or a custom autoloader 
