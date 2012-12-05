@@ -4,10 +4,10 @@
     use Exception;
 
     //allow implementor to override the packages dir
-    if(file_exists('packages.config.php'))
+    if(file_exists(dirname(__FILE__).'/packages.config.php'))
         require_once('packages.config.php');
     else
-        define('PACKAGES_DIR','packages');
+        define('PACKAGES_DIR',dirname(__FILE__).'/packages');
 
     /**
     * Default auto loader implementation, expects:
