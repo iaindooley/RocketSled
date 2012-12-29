@@ -39,7 +39,39 @@ RocketSled::configs(function()
 
 RocketSled::runnable(function()
 {
-    return new Despatcher();
+    return MyDespatcher::runnable();
+});
+
+For example if you wanted to create a package
+to do pretty URL routing, called MyUrlRouter,
+or if you wanted to use Symfony's routing 
+framework, you could put this in your
+bootstrap.php file:
+
+$hosts = array(
+    'host1' => 'local',
+    'host1' => 'live',
+);
+
+$rs_dirs = array(
+    'local' => '..',
+);
+
+$lib_dirs = array(
+    'local' => '..',
+);
+
+require($rs_dirs[$hosts[gethostname()]].'/RocketSled/rocket_sled.class.php');
+//IN ORDER TO ENSURE THAT THE STATIC MEMBER VARS ARE SETUP 
+//PRIOR TO THIS METHOD EXECUTING WE CAN USE __callStatic
+//FOR ALL OF THESE TO DISPATCH THE ACTUAL METHOD CALLS
+RocketSled::runnable(function()
+{
+    $default_runnable = RocketSled::$default_runnable;
+    if(!$ret = MyUrlRouter::runnable())
+        $ret = $default_runnable();
+    
+    return $ret;
 });
 
 ---
@@ -90,6 +122,17 @@ function provided as the third argument.
 RocketPack\Dependency::forPackage('https://github.com/iaindooley/RocketPack')
 ->add('https://github.com/zend/ZDF','v1.1')
 ->verify(RocketSled::$lib_dir);
+
+OF COURSE THIS WON'T ACTUALLY WORK UNLESS YOU EXECUTE ROCKETPACK ON EVERY
+SCRIPT EXECUTION WHICH WE DON'T WANT TO DO ... HMM BACK TO THE DRAWING
+BOARD
+
+OR ACTUALLY MAYBE RATHER THAN PASSING A CLOSURE AS THE THIRD ARGUMENT TO
+RocketPack ADD YOU JUST PASS THE PATH OF THE BOOTSTRAP FILE FOR THAT PACKAGE
+AND THEN THESE ARE SAVED IN A CONFIGURATION FILE WHICH IS PARSED BY
+RocketPack if it exists. If it doesn't exist, RocketPack will execute,
+so you can either run RocketPack by just running your application and
+using the RocketPack config operation or by running it explicitly
 
 For Murphy, it will need to scan rs_dir and userland_dir for murphy tests
 and the exclude/include need to be changed to work with this method.
