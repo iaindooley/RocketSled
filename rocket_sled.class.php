@@ -84,13 +84,19 @@
                 if(count($namespaced) > 1)
                 {
                     $class_part = strtolower(preg_replace('/^_/','',preg_replace('/([A-Z])/','_\1',array_pop($namespaced)))).'.class.php';
-                    $fname_rs       = RocketSled::$rs_dir.'/'.implode('/',$namespaced).'/'.$class_part;
-                    $fname_userland = RocketSled::$userland_dir.'/'.implode('/',$namespaced).'/'.$class_part;
+                    //this is a bit of an edge case, but quite often directories will have version information appended to them
+                    //so we match according to a pattern. Because we might get a false positive, we just err on the side of
+                    //caution and require all the classes. The overhead of including one or two classes we didn't intend to
+                    //is pretty minimal and it shouldn't happen too often (unless of course you have some bizarre directory naming
+                    //convention, in which case you should probably just install your code in RocketSled::lib_dir() and create a 
+                    //completely separate autoload method for it.
+                    $fname_rs       = glob(RocketSled::rs_dir().'/'.implode('/',$namespaced).'*/'.$class_part);
+                    $fname_userland = glob(RocketSled::userland_dir().'/'.implode('/',$namespaced).'*/'.$class_part);
                     
-                    if(file_exists($fname_rs))
-                        require_once($fname_rs);
-                    else if(file_exists($fname_userland))
-                        require_once($fname_userland);
+                    foreach($fname_rs as $fname)
+                        require_once($fname);
+                    foreach($fname_userland as $fname)
+                        require_once($fname);
                 }
                 
                 else
