@@ -20,7 +20,9 @@ by iain@workingsoftware.com.au
 
 RocketSled does not aim to provide the main application entry point and
 encourages all your code to be outside of your web accessible directory
-by default so create your first hello world, start by creating a directory
+by default.
+
+To create your first hello world, start by creating a directory
 called MyProject and make it accessible via a web browser.
 
 Install RocketSled in the same parent directory so your directory looks
@@ -83,7 +85,7 @@ details about the default autoloading and routing implementations.
 
 ## Using and extending the default router
 
-Any class which implements the rocketsled\Runnable interface can be executed
+Any class which implements the RocketSled\Runnable interface can be executed
 from the command line:
 
 ```
@@ -152,7 +154,7 @@ my/NameSpace/class_name.class.php
 
 In any directory being scanned by RocketSled
 
-NB: The capitaliasation used in the namesapce is preserved in the path,
+NB: The capitalisation used in the namesapce is preserved in the path,
 however the way that class names map to class file name is enforced.
 
 Namespaced classes can also be executed from the command line:
@@ -160,16 +162,16 @@ Namespaced classes can also be executed from the command line:
 ```
 php index.php "my\\NameSpace\\ClassName"
 ```
-NB: You will need to use double backslashes on the command line
+NB: You will need to use double backslashes on the command line.
 
-or from the browser:
+They can also be executed from the browser:
 
 ```
 http://localhost/?r=my\NameSpace\ClassName
 ```
 
-You can also override the autoload, configs and runnable functions
-by passing in closures:
+You can override the default autoloader by passing in a new Closure
+to the RocketSled::autoload() method:
 
 ```php
 RocketSled::autoload(function()
@@ -178,10 +180,25 @@ RocketSled::autoload(function()
 });
 ```
 
+Note that if you want to use a class to implement a new autoloader, for
+example to cache class paths and prevent directory scanning, then
+you will have to include that class before using it because otherwise
+RocketSled's default autoloader will always scan the directory anyway.
+
+So you can do something like:
+
+```php
+include_once('../MyCachingAutoLoader/autoload.php');
+RocketSled::autoload(MyCachingAutoLoader::autoloadClosure());
+```
+
+For an example of a caching autoloader implementation see:
+
+https://github.com/iaindooley/DataBank
 
 ## Something more sophisticated
 
-For a suggested setup using a cached autoloader and the RocketPack package management system,
+For a suggested setup using a cached autoloader and the RocketPack package management system
 setup to allow for easy deployment on multiple servers with shared packages, see the repo:
 
 https://github.com/iaindooley/RocketSledBoilerPlate
