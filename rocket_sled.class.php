@@ -60,25 +60,12 @@
                 if(count($namespaced) > 1)
                 {
                     $class_part = strtolower(preg_replace('/^_/','',preg_replace('/([A-Z])/','_\1',array_pop($namespaced)))).'.class.php';
-                    //this is a bit of an edge case, but quite often directories will have version information appended to them
-                    //so we match according to a pattern. Because we might get a false positive, we just err on the side of
-                    //caution and require all the classes. The overhead of including one or two classes we didn't intend to
-                    //is pretty minimal and it shouldn't happen too often (unless of course you have some bizarre directory naming
-                    //convention, in which case you should probably just install your code in RocketSled::lib_dir() and create a 
-                    //completely separate autoload method for it.
-                    
-                    foreach(RocketSled::scan() as $dir)
-                    {
-                        $fnames = glob($dir.'/'.implode('/',$namespaced).'*/'.$class_part);
+                    $fname = $dir.'/'.implode('/',$namespaced).'/'.$class_part;
                         
-                        foreach($fnames as $fname)
-                        {
-                            if(file_exists($fname))
-                            {
-                                require_once($fname);
-                                $ret = $fname;
-                            }
-                        }
+                    if(file_exists($fname))
+                    {
+                        require_once($fname);
+                        $ret = $fname;
                     }
                 }
                 
@@ -179,7 +166,6 @@
         */
         private static function directoryList($dir)
         {
-echo 'listing: '.$dir.PHP_EOL;
            $path = '';
            $stack[] = $dir;
            
