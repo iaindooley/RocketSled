@@ -1,23 +1,5 @@
 <?php
 
-RocketPack ... autloads ... don't need to cache
-
-You just create a common php file that has this in it:
-
-<?php return array(
-          'http://github.com/blah/blah' => array('version'  => array(0,1,0),
-                                                 'autoload' => 'bootstrap.php',
-                                                ),
-      );
-
-Then in your rocketpack.config.php you loop through and add all your foreign
-dependencies installing them in RocketSled::lib_dir(), then in rs.config.php
-loop through and include:
-
-foreach($package as $name => $data)
-    require_once(RocketSled::lib_dir().'/'.RocketPack::dirname($name,$data['version']).'/'.$data['autoload']);
-
-
 EXTENDING:
 
  use an autoload like:
@@ -25,13 +7,6 @@ EXTENDING:
     RocketSled::autoload(CachingAutoload::autoload());
 
 How does CachingAutload get found? It has an autoload register in rs.config.php...
-
-if you were also caching your configs:
-
-    RocketSled::configs(CachingConfigs::configs());
-
-So in *this* case, if you wanted to cache both configs and autoload to prevent any
-directory scanning, you would need your configs override to provide a bootstrap.php file like:
 
     require_once(RocketSled::$rs_dir.'/CachingConfigs/bootstrap.php');
     
