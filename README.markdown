@@ -24,7 +24,56 @@ default routing (see below for details) is:
 require('../RocketSled/rocket_sled.class.php');
 RocketSled::run();
 
+## Using and extending the default router
+
+
+RocketSled::runnable(function()
+{
+    return MyDespatcher::runnable();
+});
+
 ## Using and extending the default autoloader
+
+The default autoloader implementation will load any class anywhere in 
+your packages directory. The class names are mapped where:
+
+```
+ClassName
+```
+
+is expected to be located in a file anywhere in your packages directory called:
+
+```
+class_name.class.php
+```
+
+The default autoloader implementation also supports namespaces. It expects the
+namespace path to match the directory structure so the class:
+
+```php
+my\NameSpace\ClassName
+```
+
+is expected to be located in:
+
+```
+PACKAGES_DIR/my/NameSpace/class_name.class.php
+```
+NB: The capitaliasation used in the namesapce is preserved in the path,
+however the way that class names map to class file name is enforced.
+
+Namespaced classes can also be executed from the command line:
+
+```
+php index.php "my\\NameSpace\\ClassName"
+```
+NB: You will need to use double backslashes on the command line
+
+or from the browser:
+
+```
+http://localhost/?r=my\NameSpace\ClassName
+```
 
 You can also override the autoload, configs and runnable functions
 by passing in closures:
@@ -36,12 +85,6 @@ RocketSled::autoload(function()
 });
 ```
 
-## Using and extending the default router
-
-RocketSled::runnable(function()
-{
-    return MyDespatcher::runnable();
-});
 
 ## Something more sophisticated
 
