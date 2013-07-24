@@ -1,4 +1,4 @@
-# RocketSled - a micro framework for PHP 5.3+
+# RocketSled - a the microest framework for PHP 5.3+
 
 by iain@workingsoftware.com.au
 
