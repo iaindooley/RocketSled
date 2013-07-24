@@ -60,12 +60,16 @@
                 if(count($namespaced) > 1)
                 {
                     $class_part = strtolower(preg_replace('/^_/','',preg_replace('/([A-Z])/','_\1',array_pop($namespaced)))).'.class.php';
-                    $fname = $dir.'/'.implode('/',$namespaced).'/'.$class_part;
-                        
-                    if(file_exists($fname))
+                    
+                    foreach(RocketSled::scan() as $dir)
                     {
-                        require_once($fname);
-                        $ret = $fname;
+                        $fname = $dir.'/'.implode('/',$namespaced).'/'.$class_part;
+                            
+                        if(file_exists($fname))
+                        {
+                            require_once($fname);
+                            $ret = $fname;
+                        }
                     }
                 }
                 

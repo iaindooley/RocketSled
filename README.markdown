@@ -26,22 +26,55 @@ RocketSled::run();
 
 ## Using and extending the default router
 
+Any class which implements the rocketsled\Runnable interface can be executed
+from the command line:
 
+```
+php index.php RunnableClass
+```
+
+or from the browser:
+
+```
+http://localhost/?r=RunnableClass
+```
+
+By default, RocketSled will look for the first argument on the command line
+or a parameter in the query string "r" (for runnable).
+
+You can override this behaviour with your own implementation by passing a new
+Closure into the RocketSled::runnable() method:
+
+```php
 RocketSled::runnable(function()
 {
     return MyDespatcher::runnable();
 });
+```
+
+The function you pass in should return an instantiated object that implements
+the Runnable interface.
 
 ## Using and extending the default autoloader
 
-The default autoloader implementation will load any class anywhere in 
-your packages directory. The class names are mapped where:
+The default autoloader implementation will load any class in any directory
+being scanned by RocketSled.
+
+By default, RocketSled will scan its own parent directory, however you can
+change this by passing in an array of directory paths to the RocketSled::scan()
+method:
+
+```php
+RocketSled::scan(array('../','/some/shared/path/');
+```
+
+The class names are mapped to files where:
 
 ```
 ClassName
 ```
 
-is expected to be located in a file anywhere in your packages directory called:
+is expected to be located in a file called:
 
 ```
 class_name.class.php
@@ -57,8 +90,11 @@ my\NameSpace\ClassName
 is expected to be located in:
 
 ```
-PACKAGES_DIR/my/NameSpace/class_name.class.php
+my/NameSpace/class_name.class.php
 ```
+
+In any directory being scanned by RocketSled
+
 NB: The capitaliasation used in the namesapce is preserved in the path,
 however the way that class names map to class file name is enforced.
 
