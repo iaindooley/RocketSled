@@ -3,53 +3,28 @@
 
     class RocketSled
     {
-        private static $rs_dir           = NULL;
-        private static $userland_dir     = NULL;
-        private static $lib_dir          = NULL;
-        private static $root_dir         = NULL;
+        private static $scan             = NULL;
         private static $instance         = NULL;
         private static $runnable         = NULL;
         private static $autoload         = NULL;
-        private static $configs          = NULL;
         private static $packages         = NULL;
 
         private function __construct()
         {
-            self::$runnable     = self::defaultRunnable();
-            self::$autoload     = self::defaultAutoload();
+            self::$runnable  = self::defaultRunnable();
+            self::$autoload  = self::defaultAutoload();
+            self::$scan      = array('.');
             spl_autoload_register(self::$autoload);
-            self::$configs      = self::defaultConfigs();
-            self::$rs_dir       = realpath(__DIR__.'/..');
-            self::$lib_dir      = self::$rs_dir;
-            self::$userland_dir = self::getParentDirectoryOfFileThatIncludedMe();
-            self::$root_dir     = self::getDirectoryOfFileThatIncludedMe();
         }
         
         public static function run()
         {
             self::instance();
-            $configs  = self::$configs;
             $runnable = self::$runnable;
-            $configs();
             $runnable_object = $runnable();
             $runnable_object->run();
         }
         
-        /**
-        * Courtesy of danorton from stackoverflow: http://stackoverflow.com/questions/1318608/php-get-parent-script-name
-        */
-        private static function getParentDirectoryOfFileThatIncludedMe()
-        {
-            return realpath(dirname(self::getDirectoryOfFileThatIncludedMe()));
-        }
-
-        private static function getDirectoryOfFileThatIncludedMe()
-        {
-            $backtrace = debug_backtrace(defined("DEBUG_BACKTRACE_IGNORE_ARGS") ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
-            $top_frame = array_pop($backtrace);
-            return dirname($top_frame['file']);
-        }
-
         public static function defaultRunnable()
         {
             return function()
@@ -90,13 +65,15 @@
                     //is pretty minimal and it shouldn't happen too often (unless of course you have some bizarre directory naming
                     //convention, in which case you should probably just install your code in RocketSled::lib_dir() and create a 
                     //completely separate autoload method for it.
-                    $fname_rs       = glob(RocketSled::rs_dir().'/'.implode('/',$namespaced).'*/'.$class_part);
-                    $fname_userland = glob(RocketSled::userland_dir().'/'.implode('/',$namespaced).'*/'.$class_part);
                     
-                    foreach($fname_rs as $fname)
-                        require_once($fname);
-                    foreach($fname_userland as $fname)
-                        require_once($fname);
+                    foreach(RocketSled::scan() as $dir)
+                    {
+                        $fnames = glob($dir.'/'.implode('/',$namespaced).'*/'.$class_part);
+                        
+                        foreach($fnames as $fname)
+                            if(file_exists($fname))
+                                require_once($fname);
+                    }
                 }
                 
                 else
@@ -115,29 +92,6 @@
             };
         }
 
-        public static function defaultConfigs()
-        {
-            return function()
-            {
-                $ret = array();
-                
-                /**
-                * Recursively scan the package tree for files called config.php
-                * with package configuration or custom autoload implementations
-                */
-                RocketSled::filteredPackages(function($fname) use(&$ret)
-                {
-                    if(basename($fname) == 'rs.config.php')
-                    {
-                        require_once($fname);
-                        $ret[] = $fname;
-                    }
-                });
-                
-                return $ret;
-            };
-        }
-        
         public static function instance()
         {
             if(self::$instance === NULL)
@@ -146,90 +100,34 @@
             return self::$instance;
         }
 
-        public static function __callStatic($name,$args)
+        /**
+        * Pass in an array of directories to scan
+        */
+        public static function scan($dirs = NULL)
         {
-            //Make sure we're initialised
-            //directories and instance
+            self::instance();
+            if($dirs !== NULL)
+            {
+                self::$scan = array_filter(array_unique($dirs),function($path)
+                {
+                    return realpath($path);
+                });
+            }
+
+            else
+                return self::$scan;
+        }
+
+        public static function autoload(Closure $autoload = NULL)
+        {
             self::instance();
             
-            switch($name)
-            {
-                case 'rs_dir':
-                    $ret = self::setRsDir($args);
-                break;
-                
-                case 'lib_dir':
-                    $ret = self::setLibDir($args);
-                break;
-
-                case 'userland_dir':
-                    $ret = self::setUserlandDir($args);
-                break;
-
-                case 'root_dir':
-                    $ret = self::setRootDir($args);
-                break;
-
-                case 'autoload':
-                    $ret = self::setAutoload($args);
-                break;
-
-                case 'runnable':
-                    $ret = self::setRunnable($args);
-                break;
-
-                case 'configs':
-                    $ret = self::setConfigs($args);
-                break;
-                
-                default:
-                    throw new Exception('Tried to call non-existent static method: RocketSled::'.$name);
-                break;
-            }
-            
-            return $ret;
-        }
-        
-        private static function setRsDir($args)
-        {
-            if(count($args))
-                self::$rs_dir = realpath($args[0]);
-            else
-                return self::$rs_dir;
-        }
-
-        private static function setLibDir($args)
-        {
-            if(count($args))
-                self::$lib_dir = realpath($args[0]);
-            else
-                return self::$lib_dir;
-        }
-
-        private static function setUserlandDir($args)
-        {
-            if(count($args))
-                self::$userland_dir = realpath($args[0]);
-            else
-                return self::$userland_dir;
-        }
-
-        private static function setRootDir($args)
-        {
-            if(count($args))
-                self::$root_dir = realpath($args[0]);
-            else
-                return self::$root_dir;
-        }
-
-        private static function setAutoload($args)
-        {
-            if(count($args))
+            if(is_object($autoload))
             {
                 if(self::$autoload !== NULL)
                     spl_autoload_unregister(self::$autoload);
 
-                self::$autoload = $args[0];
+                self::$autoload = $autoload;
                 spl_autoload_register(self::$autoload);
             }
 
@@ -237,35 +135,29 @@
                 return self::$autoload;
         }
 
-        private static function setConfigs($args)
+        public static function runnable(Closure $runnable = NULL)
         {
-            if(count($args))
-                self::$configs = $args[0];
-            else
-                return self::$configs;
-        }
-
-        private static function setRunnable($args)
-        {
-            if(count($args))
-                self::$runnable = $args[0];
+            self::instance();
+            
+            if(is_object($runnable))
+                self::$runnable = $runnable;
             else
                 return self::$runnable;
         }
-
+            
         public static function filteredPackages($callback)
         {
             return array_filter(self::packages(),$callback);
         }
     
-        public static function packages()
+        private static function packages()
         {
             if(self::$packages === NULL)
             {
-                self::$packages = self::directoryList(self::$rs_dir);
-                
-                if(self::$rs_dir !== self::$userland_dir)
-                    self::$packages = array_merge(self::$packages,self::directoryList(self::$userland_dir));
+                self::$packages = array();
+
+                foreach(self::$scan as $dir)
+                    self::$packages = array_merge(self::$packages,self::directoryList($dir));
             }
 
             return self::$packages;
@@ -274,7 +166,7 @@
         /**
         * Courtesy of donovan dot pp at gmail dot com on http://au2.php.net/scandir
         */
-        public static function directoryList($dir)
+        private static function directoryList($dir)
         {
            $path = '';
            $stack[] = $dir;
