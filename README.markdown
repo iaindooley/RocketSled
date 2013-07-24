@@ -18,11 +18,68 @@ by iain@workingsoftware.com.au
 
 ## Hello World
 
-The simplest possible RocketSled application using the default autoloader and 
-default routing (see below for details) is:
+RocketSled does not aim to provide the main application entry point and
+encourages all your code to be outside of your web accessible directory
+by default so create your first hello world, start by creating a directory
+called MyProject and make it accessible via a web browser.
 
+Install RocketSled in the same parent directory so your directory looks
+like this:
+
+```
+site/
+├── MyProject
+└── RocketSled
+```
+
+Now in MyProject put a file called index.php that looks like this:
+
+```php
+<?php
 require('../RocketSled/rocket_sled.class.php');
 RocketSled::run();
+```
+
+You should then put all your actual code into classes inside other packages
+for example if you wanted to create code to say "Hello World" create a directory
+called HelloWorld as a sibling of the other two:
+
+```
+site/
+├── MyProject
+├── RocketSled
+└── HelloWorld
+```
+
+Now inside HelloWorld put a file called say_hello.class.php that looks like
+this:
+
+```php
+<?php
+    class SayHello implements RocketSled\Runnable
+    {
+        public function run()
+        {
+            echo "Hello World!".PHP_EOL;
+        }
+    }
+```
+
+Now you can run your class from the command line like this:
+
+```
+php index.php SayHello
+```
+
+or from a web browser like this:
+
+```
+http://localhost/MyProject/?r=SayHello
+```
+
+You can organise your code/classes however you like. See below for further
+details about the default autoloading and routing implementations.
+
 
 ## Using and extending the default router
 
