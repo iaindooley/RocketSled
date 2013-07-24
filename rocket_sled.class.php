@@ -13,7 +13,7 @@
         {
             self::$runnable  = self::defaultRunnable();
             self::$autoload  = self::defaultAutoload();
-            self::$scan      = array('.');
+            self::$scan      = array(__DIR__.'/../');
             spl_autoload_register(self::$autoload);
         }
         
@@ -54,6 +54,7 @@
         {
             return function($class)
             {
+                $ret = FALSE;
                 $namespaced = explode('\\',$class);
                 
                 if(count($namespaced) > 1)
@@ -71,24 +72,34 @@
                         $fnames = glob($dir.'/'.implode('/',$namespaced).'*/'.$class_part);
                         
                         foreach($fnames as $fname)
+                        {
                             if(file_exists($fname))
+                            {
                                 require_once($fname);
+                                $ret = $fname;
+                            }
+                        }
                     }
                 }
                 
                 else
                 {
-                    $classes = RocketSled::filteredPackages(function($fname) use ($class)
+                    $classes = RocketSled::filteredPackages(function($fname) use ($class,&$ret)
                     {
                         $ending = '.class.php';
             
                         if(RocketSled::endsWith($fname,$ending))
                         {
                             if(str_replace(' ','',ucwords(str_replace('_',' ',str_replace($ending,'',basename($fname))))) === $class)
+                            {
                                 require_once($fname);
+                                $ret = $fname;
+                            }
                         }
                     });
                 }
+
+                return $ret;
             };
         }
 
@@ -122,7 +133,7 @@
         {
             self::instance();
             
-            if(is_object($autoload))
+            if($autoload !== NULL)
             {
                 if(self::$autoload !== NULL)
                     spl_autoload_unregister(self::$autoload);
@@ -139,7 +150,7 @@
         {
             self::instance();
             
-            if(is_object($runnable))
+            if($runnable !== NULL)
                 self::$runnable = $runnable;
             else
                 return self::$runnable;
@@ -168,6 +179,7 @@
         */
         private static function directoryList($dir)
         {
+echo 'listing: '.$dir.PHP_EOL;
            $path = '';
            $stack[] = $dir;
            
