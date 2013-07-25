@@ -16,6 +16,8 @@ by iain@workingsoftware.com.au
 
 * Don't provide the main application entry point (eg. index.php)
 
+* Don't be magic: work with PHP and use PHPs features
+
 ## Hello World
 
 RocketSled does not aim to provide the main application entry point and
