@@ -40,7 +40,7 @@ Now in MyProject put a file called index.php that looks like this:
 
 ```php
 <?php
-require('../RocketSled/rocket_sled.class.php');
+require('../RocketSled/autoload.php');
 RocketSled::run();
 ```
 

@@ -1,0 +1,9 @@
+<?php
+    spl_autoload_register(function()
+    {
+        if(!class_exists('RocketSled'))
+        {
+            require_once(dirname(__FILE__).'/rocket_sled.class.php');
+            RocketSled::instance();
+        }
+    });
