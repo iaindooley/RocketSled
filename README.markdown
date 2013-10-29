@@ -2,6 +2,8 @@
 
 by iain@workingsoftware.com.au
 
+#NB: This release of RocketSled is a new, non-monolithic style RocketSled. In this release, RocketSled no longer has the main "entry point" to the application, ie. index.php. This represents a significant change in the code. If you are already using RocketSled and don't wish to update, use the release tagged 1.3 or below and fork from there.
+
 ## Goals:
 
 * Provide a simple way to organise code from anywhere
