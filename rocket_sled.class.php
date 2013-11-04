@@ -157,9 +157,13 @@
             if(self::$packages === NULL)
             {
                 self::$packages = array();
-
                 foreach(self::$scan as $dir)
-                    self::$packages = array_merge(self::$packages,self::directoryList($dir));
+                {
+                    $list = self::directoryList($dir);
+                    
+                    if(is_array($list) && count($list))
+                        self::$packages = array_merge(self::$packages,$list);
+                }
             }
 
             return self::$packages;
