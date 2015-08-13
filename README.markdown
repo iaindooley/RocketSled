@@ -71,6 +71,12 @@ this:
     }
 ```
 
+Now change to MyProject directory:
+
+```
+cd /path/to/MyProject/
+```
+
 Now you can run your class from the command line like this:
 
 ```
