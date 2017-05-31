@@ -174,7 +174,7 @@
         */
         private static function directoryList($dir)
         {
-           $path = '';
+           $path = array();
            $stack[] = $dir;
            
            while ($stack)
